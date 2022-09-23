@@ -35,20 +35,28 @@ public class MyRESTController {
         return user;
     }
 
-    @ExceptionHandler
-    public ResponseEntity<UserIncorrectData> HundleException(NoSuchUserException exception){
-        UserIncorrectData data = new UserIncorrectData();
-        data.setInfo(exception.getMessage());
-
-        return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+    @PostMapping("/users")
+    public User addNewUser(@RequestBody User user){
+        userService.saveUser(user);
+        return user;
     }
 
-    @ExceptionHandler
-    public ResponseEntity<UserIncorrectData> HundleException(Exception exception){
-        UserIncorrectData data = new UserIncorrectData();
-        data.setInfo(exception.getMessage());
-
-        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+    @PutMapping("/users")
+    public User updateUser(@RequestBody User user){
+        userService.saveUser(user);
+        return user;
     }
+
+    @DeleteMapping("/users/{id}")
+    public String deleteUser(@PathVariable int id){
+        User user = userService.getUser(id);
+        if(user == null){
+            throw new NoSuchUserException("There is no user with ID = " +id+ " in Database");
+        }
+        userService.deleteUser(id);
+        return "User with ID = "+ id +" was deleted";
+    }
+
+
 
 }
